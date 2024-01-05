@@ -85,6 +85,7 @@ public class UsuarioRepository implements IUsuarioRepository {
             conn = DriverManager.getConnection(db_url);
             conn.setAutoCommit(false);
 
+            //BORRAMOS TODOS LOS MENSAJES DE UN USUARIO, SI NO LOS HUBIERA NO DAMOS ERROR
             String sql ="DELETE FROM mensaje WHERE from_user = ? OR to_user = ?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -92,22 +93,16 @@ public class UsuarioRepository implements IUsuarioRepository {
             stmt.setInt(1, usuario.getId());
             stmt.setInt(2, usuario.getId());
 
-            int rows = stmt.executeUpdate();
-            System.out.println(rows);
-
-            if (rows <= 0) {
-                throw new SQLException();
-            }
-
             stmt.close();
 
+            //BORRAMOS USUARIO
             sql = "DELETE FROM usuario WHERE id=?";
 
             stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, usuario.getId());
 
-            rows = stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
             System.out.println(rows);
 
             if (rows <= 0) {
