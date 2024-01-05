@@ -12,6 +12,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -54,13 +56,13 @@ class UsuarioRepositoryTest {
 
     @Test
     void dadoUnUsuarioValido_cuandoActualizar_entoncesUsuarioValido() throws SQLException {
-        Usuario user = new Usuario(11, "Nuevo Cliente 12", "mmm@n.com", LocalDate.now(), true);
+        Usuario user = new Usuario(11, "Nuevo Cliente 11", "mmm@n.com", LocalDate.now(), true);
 
-        repo.actualizar(user);
+        Usuario userUpdate = repo.actualizar(user);
 
         System.out.println(user);
 
-        assertThat(user.getId(), greaterThan(0));
+        assertThat(user.getEmail(), is(userUpdate.getEmail()));
     }
 
     @Test
@@ -74,7 +76,7 @@ class UsuarioRepositoryTest {
     @Test
     void dadoUnUsuarioValido_cuandoBorrar_entoncesOK() throws SQLException {
 
-        Usuario user = new Usuario(17, null, null, null, false);
+        Usuario user = new Usuario(16, null, null, null, false);
 
         boolean ok = repo.borrar(user);
 
@@ -93,10 +95,29 @@ class UsuarioRepositoryTest {
 
     @Test
     void dadoUnUsuarioValido_cuandoObtenerPosiblesDestinatarios_entoncesLista() {
+
+        Set<Usuario> listaUsuarios = new HashSet<>();
+
+        try {
+            listaUsuarios = repo.obtenerPosiblesDestinatarios(11,3);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("Destinatario posibles: " + listaUsuarios);
+
+        assertThat(listaUsuarios.size(), greaterThan(0));
+
+
     }
 
     @Test
     void dadoUnUsuarioNOValido_cuandoObtenerPosiblesDestinatarios_entoncesExcepcion() {
+
+        assertThrows(SQLException.class, () -> {
+            Set<Usuario> listaUsuarios = new HashSet<>();
+            listaUsuarios = repo.obtenerPosiblesDestinatarios(55,5);
+        });
     }
 
 }

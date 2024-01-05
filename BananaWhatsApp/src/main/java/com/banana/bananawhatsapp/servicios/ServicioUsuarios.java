@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 //@Service
@@ -39,11 +41,30 @@ public class ServicioUsuarios implements IServicioUsuarios{
 
     @Override
     public Usuario actualizarUsuario(Usuario usuario) throws UsuarioException {
-        return null;
+
+        Usuario usuUpdate;
+
+        try {
+            usuario.valido();
+            usuUpdate = repoUsuario.actualizar(usuario);
+        } catch (SQLException e) {
+            throw new UsuarioException(e.getMessage());
+        }
+
+        return usuUpdate;
     }
 
     @Override
-    public Usuario obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException {
-        return null;
+    public Set <Usuario> obtenerPosiblesDesinatarios(Usuario usuario, int max) throws UsuarioException {
+
+        Set <Usuario> listaUsuario = new HashSet<>();
+
+        try {
+           listaUsuario = repoUsuario.obtenerPosiblesDestinatarios(usuario.getId(), max);
+
+        } catch (SQLException e) {
+            throw new UsuarioException(e.getMessage());
+        }
+        return listaUsuario;
     }
 }

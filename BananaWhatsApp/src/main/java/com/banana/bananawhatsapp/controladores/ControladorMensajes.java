@@ -3,9 +3,11 @@ package com.banana.bananawhatsapp.controladores;
 import com.banana.bananawhatsapp.modelos.Mensaje;
 import com.banana.bananawhatsapp.modelos.Usuario;
 import com.banana.bananawhatsapp.servicios.IServicioMensajeria;
+import lombok.Setter;
 
 import java.util.List;
 
+@Setter
 public class ControladorMensajes {
     private IServicioMensajeria servicioMensajeria;
 
@@ -25,6 +27,7 @@ public class ControladorMensajes {
         }
 
     }
+
 
     public boolean mostrarChat(Integer remitente, Integer destinatario) {
         try {
